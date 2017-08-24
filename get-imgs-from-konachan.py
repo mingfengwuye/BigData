@@ -32,9 +32,20 @@ if os.path.exists('imgs') is False:
 start = 1
 end = 8000
 
+import urllib, urllib2  
+# set header
+user_agent = 'Mozilla/4.0 (compatible; MSIE 5.5; Windows NT)'  
+headers = {'User-Agent':user_agent} 
+
 for i in range(start, end+1):
    url = 'http://konachan.net/post?page=%dtags=' % i
-   html = requests.get(url).text
+   # construct Request，the second parameter is data
+   request = urllib2.Request(url, None, headers)
+ 
+   # get response
+   response = urllib2.urlopen(request)  
+   html = response.read()
+   # html = requests.get(url).text
    soup = BeautifulSoup(html, 'html.parser')
    for img in soup.find_all('img', class_="preview"):
       target_url = 'http:'+img['src']
